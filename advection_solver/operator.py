@@ -14,13 +14,13 @@ from . util import roll  # np.roll doesn't work with jit(nopython=True)
 def upwind_tendency(c, u, dx, dt):
     '''
     Upwind tendency with periodic boundary
-    
+
     Args:
       c: 1d numpy array, density field
       u: 1d numpy array, wind field
       dx: float, grid spacing (assume uniform)
       dt: float, time step
-     
+
     Returns:
       1d numpy array with same shape as `c`
     '''
@@ -46,16 +46,16 @@ def upwind_tendency(c, u, dx, dt):
 def vanleer_tendency(c, u, dx, dt):
     """
     Second-order flux-limited (VanLeer) tendency with periodic boundary
-    
+
     Args:
       c: 1d numpy array, density field
       u: 1d numpy array, wind field
       dx: float, grid spacing (assume uniform)
       dt: float, time step
-     
+
     Returns:
       1d numpy array with same shape as `c`
-    
+
     Reference: The "mono-5" limiter in
     Lin, S.-J., et al. (1994). "A class of the van Leer-type transport schemes and its application to the moisture transport in a general circulation model."
     """
