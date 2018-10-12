@@ -21,7 +21,9 @@ def test_upwind():
         c += upwind_tendency(c, u, dx, dt)
 
     assert c.argmax() == 79  # center location
-    np.testing.assert_almost_equal(c.mean(), 0.2)  # mass conservation
+    np.testing.assert_almost_equal(c.mean(), c0.mean())  # mass conservation
+    assert c.max() < 1.0  # no over-shoot
+    assert c.min() > 0.0  # positiivty
 
 
 def test_vanleer():
@@ -30,4 +32,6 @@ def test_vanleer():
         c += vanleer_tendency(c, u, dx, dt)
 
     assert c.argmax() == 79  # center location
-    np.testing.assert_almost_equal(c.mean(), 0.2)  # mass conservation
+    np.testing.assert_almost_equal(c.mean(), c0.mean())  # mass conservation
+    np.testing.assert_almost_equal(c.max(), 1, decimal=4)  # peak-preserving
+    np.testing.assert_almost_equal(c.min(), 0)  # positiivty
