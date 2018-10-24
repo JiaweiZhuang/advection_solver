@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from advection_solver.operator import upwind_tendency, vanleer_tendency
+from advection_solver.advection_1d import upwind_tendency, vanleer_tendency
 
 nx = 100
 Lx = 1

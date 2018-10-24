@@ -1,7 +1,7 @@
 import numpy as np
 
 from numba import jit
-from . operator import upwind_tendency, vanleer_tendency
+from . advection_1d import upwind_tendency, vanleer_tendency
 
 
 # Apply 1D operator in x, y dimensions separately, and then add up tendencies
@@ -69,6 +69,7 @@ def tendency_2d_vanleer(c, u, v, dx, dy, dt):
                 )
 
     return tendency
+
 
 @jit(nopython=True)
 def tendency_2d_upwind(c, u, v, dx, dy, dt):
