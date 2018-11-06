@@ -43,7 +43,7 @@ def upwind_tendency(c, u, dx, dt):
 
 
 @jit(nopython=True)
-def vanleer_tendency(c, u, dx, dt):
+def vanleer_tendency(c, u, dx, dt, limiter=True):
     """
     Second-order flux-limited (VanLeer) tendency with periodic boundary
 
@@ -75,13 +75,16 @@ def vanleer_tendency(c, u, dx, dt):
     delta_avg = (delta + roll(delta, -1))/2
 
     # compute slope (mismatch) in piecewise-linear reconstruction
-    for i in range(nx):
-        # compute local limiter
-        c_max = max(c[i], c_l[i], c_r[i])  # upper boundary
-        c_min = min(c[i], c_l[i], c_r[i])  # lower boundary
-        mismatch[i] = np.sign(delta_avg[i])*min(abs(delta_avg[i]),
-                                                2*(c[i]-c_min),
-                                                2*(c_max-c[i]))
+    if limiter:
+        for i in range(nx):
+            # compute local limiter
+            c_max = max(c[i], c_l[i], c_r[i])  # upper boundary
+            c_min = min(c[i], c_l[i], c_r[i])  # lower boundary
+            mismatch[i] = np.sign(delta_avg[i])*min(abs(delta_avg[i]),
+                                                    2*(c[i]-c_min),
+                                                    2*(c_max-c[i]))
+    else:
+        mismatch = delta_avg  # just take original slope
 
     # compute flux from slope
     mismatch_l = roll(mismatch, 1)

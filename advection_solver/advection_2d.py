@@ -27,25 +27,25 @@ def _tend_y_inner(c, v, dy, dt):
 
 
 @jit(nopython=True)
-def _tend_x_outer(c, u, dx, dt):
+def _tend_x_outer(c, u, dx, dt, limiter=True):
     ny, nx = c.shape
     tend = np.empty((ny, nx))
     for i in range(ny):
-        tend[i, :] = vanleer_tendency(c[i, :], u[i, :], dx, dt)
+        tend[i, :] = vanleer_tendency(c[i, :], u[i, :], dx, dt, limiter=limiter)
     return tend
 
 
 @jit(nopython=True)
-def _tend_y_outer(c, v, dy, dt):
+def _tend_y_outer(c, v, dy, dt, limiter=True):
     ny, nx = c.shape
     tend = np.empty((ny, nx))
     for j in range(nx):
-        tend[:, j] = vanleer_tendency(c[:, j], v[:, j], dy, dt)
+        tend[:, j] = vanleer_tendency(c[:, j], v[:, j], dy, dt, limiter=limiter)
     return tend
 
 
 @jit(nopython=True)
-def tendency_2d_vanleer(c, u, v, dx, dy, dt):
+def tendency_2d_vanleer(c, u, v, dx, dy, dt, limiter=True):
     '''
     2D advection tendency with periodic boundary
     Use second-order (VanLeer) scheme for outer operator and upwind for inner operator
@@ -64,8 +64,8 @@ def tendency_2d_vanleer(c, u, v, dx, dy, dt):
     ny, nx = c.shape
 
     # operator splitting in x and y directions
-    tendency = (_tend_x_outer(0.5*_tend_y_inner(c, v, dy, dt) + c, u, dx, dt) +
-                _tend_y_outer(0.5*_tend_x_inner(c, u, dx, dt) + c, v, dy, dt)
+    tendency = (_tend_x_outer(0.5*_tend_y_inner(c, v, dy, dt) + c, u, dx, dt, limiter=limiter) +
+                _tend_y_outer(0.5*_tend_x_inner(c, u, dx, dt) + c, v, dy, dt, limiter=limiter)
                 )
 
     return tendency
