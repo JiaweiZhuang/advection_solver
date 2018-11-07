@@ -2,7 +2,7 @@ import setuptools
 
 INSTALL_REQUIRES = [
     'numpy',
-    'numba'
+    'tensorflow'
 ]
 
 setuptools.setup(
