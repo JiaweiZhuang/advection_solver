@@ -31,7 +31,7 @@ def test_upwind_1d():
     for _ in range(nt):
         c_tensor += tf_solver.upwind_tendency_1d(c_tensor, u_tensor, dx, dt)
 
-    np.array_equal(c_tensor.numpy(), c)
+    np.testing.assert_array_equal(c_tensor.numpy(), c)
 
 
 def test_vanleer_1d():
@@ -56,7 +56,7 @@ def test_vanleer_1d():
     for _ in range(nt):
         c_tensor += tf_solver.vanleer_tendency_1d(c_tensor, u_tensor, dx, dt)
 
-    np.array_equal(c_tensor.numpy(), c)
+    np.testing.assert_array_equal(c_tensor.numpy(), c)
 
 
 def test_vanleer_2d():
@@ -86,6 +86,7 @@ def test_vanleer_2d():
     v_tensor = tf.convert_to_tensor(v)
 
     for _ in range(nt):
-        c_tensor += tf_solver.vanleer_tendency_2d(c_tensor, u_tensor, v_tensor, dx, dy, dt)
+        c_tensor += tf_solver.vanleer_tendency_2d(c_tensor, u_tensor, v_tensor,
+                                                  dx, dy, dt, flip_dim=False)
 
-    np.array_equal(c_tensor.numpy(), c)
+    np.testing.assert_array_equal(c_tensor.numpy(), c)
